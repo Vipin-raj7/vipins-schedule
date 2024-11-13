@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vipin's Schedule</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background: url('https://www.transparenttextures.com/patterns/black-linen.png'), url('https://www.wallpaperflare.com/static/777/773/679/binary-code-wallpaper.jpg');
+            background-size: cover, cover;
+            background-position: center, center;
+            animation: bgMove 10s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% {
+                background-position: 0 0, 0 0;
+            }
+            100% {
+                background-position: 100% 100%, 100% 100%;
+            }
+        }
+
+        .schedule-container {
+            width: 80%;
+            max-width: 700px;
+            padding: 30px;
+            background-color: rgba(51, 51, 51, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 36px;
+            color: #00ff00;
+        }
+
+        .current-day {
+            text-align: center;
+            font-size: 24px;
+            color: #00ff00;
+            margin-bottom: 10px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .schedule-table th, .schedule-table td {
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .schedule-table th {
+            background-color: #007700;
+            color: white;
+            font-size: 18px;
+        }
+
+        .schedule-table td {
+            background-color: #1a1a1a;
+            color: #00ff00;
+            border-radius: 5px;
+        }
+
+        .schedule-table td:hover {
+            background-color: #004d00;
+            cursor: pointer;
+        }
+
+        .current-activity {
+            background-color: #00ff00;
+            color: #1e1e1e;
+            animation: blink 1.5s infinite;
+        }
+
+        .refresh-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #007700;
+            color: #00ff00;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .refresh-button:hover {
+            background-color: #004d00;
+        }
+
+        @keyframes blink {
+            50% {
+                background-color: #00ff00;
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="schedule-container">
+        <h2>Vipin's Schedule</h2>
+        <div class="current-day" id="currentDay"></div>
+        <table class="schedule-table" id="scheduleTable">
+            <thead>
+                <tr>
+                    <th>Time Slot</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody id="scheduleBody">
+                <!-- Schedule rows will be injected here -->
+            </tbody>
+        </table>
+        <button class="refresh-button" onclick="refreshSchedule()">Refresh</button>
+    </div>
+
+    <script>
+        const schedule = {
+            "Monday": [
+                { time: "8:00 AM - 10:00 AM", activity: "Chats", icon: "🗨️" },
+                { time: "10:00 AM - 11:30 AM", activity: "Calls", icon: "📞" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
+                { time: "12:00 PM - 3:00 PM", activity: "Calls", icon: "📞" },
+                { time: "3:00 PM - 4:00 PM", activity: "Chats", icon: "🗨️" },
+            ],
+            "Tuesday": [
+                { time: "8:00 AM - 11:30 AM", activity: "Chats", icon: "🗨️" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats", icon: "🗨️" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls", icon: "📞" },
+            ],
+            "Wednesday": [
+                { time: "8:00 AM - 11:30 AM", activity: "Chats", icon: "🗨️" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats", icon: "🗨️" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls", icon: "📞" },
+            ],
+            "Thursday": [
+                { time: "8:00 AM - 11:30 AM", activity: "Chats", icon: "🗨️" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats", icon: "🗨️" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls", icon: "📞" },
+            ],
+            "Friday": [
+                { time: "8:00 AM - 10:00 AM", activity: "Chats", icon: "🗨️" },
+                { time: "10:00 AM - 11:30 AM", activity: "Calls", icon: "📞" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
+                { time: "12:00 PM - 3:00 PM", activity: "Calls", icon: "📞" },
+                { time: "3:00 PM - 4:00 PM", activity: "Chats", icon: "🗨️" },
+            ],
+        };
+
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        let currentDay = new Date().toLocaleString('en-us', { weekday: 'long' });
+
+        function getTodaySchedule() {
+            if (!daysOfWeek.includes(currentDay)) {
+                currentDay = "Monday"; // Default to Monday if current day is unknown
+            }
+
+            document.getElementById("currentDay").innerHTML = `<strong>Today:</strong> ${currentDay}`;
+
+            const scheduleForToday = schedule[currentDay];
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes(); // in minutes
+
+            let currentActivity = null;
+            let currentTimeSlot = null;
+
+            for (let i = 0; i < scheduleForToday.length; i++) {
+                const [startHour, startMinute] = scheduleForToday[i].time.split(' - ')[0].split(':');
+                const [endHour, endMinute] = scheduleForToday[i].time.split(' - ')[1].split(':');
+                const start = parseInt(startHour) * 60 + parseInt(startMinute);
+                const end = parseInt(endHour) * 60 + parseInt(endMinute);
+
+                if (currentTime >= start && currentTime <= end) {
+                    currentActivity = scheduleForToday[i];
+                    currentTimeSlot = i;
+                    break;
+                }
+            }
+
+            let tableContent = '';
+            scheduleForToday.forEach((activity, index) => {
+                tableContent += `
+                    <tr class="${index === currentTimeSlot ? 'current-activity' : ''}">
+                        <td>${activity.time}</td>
+                        <td>${activity.icon} ${activity.activity}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("scheduleBody").innerHTML = tableContent;
+
+            if (currentActivity && currentActivity.activity !== document.title) {
+                document.title = `Vipin's Schedule - ${currentActivity.activity}`;
+                alert(`New activity: ${currentActivity.activity}`);
+            }
+        }
+
+        function refreshSchedule() {
+            getTodaySchedule();
+        }
+
+        setInterval(refreshSchedule, 60000); // Refresh every minute
+        window.onload = refreshSchedule;
+    </script>
+</body>
+</html>
