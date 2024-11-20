@@ -169,8 +169,8 @@
             "Wednesday": [
                 { time: "8:00 AM - 11:30 AM", activity: "Chats" },
                 { time: "11:30 AM - 12:00 PM", activity: "Lunch" },
-                { time: "12:00 PM - 4:48 PM", activity: "Chats" },
-                { time: "4:48 PM - 5:00 PM", activity: "Calls" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls" },
             ],
             "Thursday": [
                 { time: "8:00 AM - 11:30 AM", activity: "Chats" },
@@ -195,7 +195,7 @@
             document.getElementById("currentDay").innerText = `Today: ${currentDay}`;
 
             const banner = document.getElementById("pendingOrdersBanner");
-            if (currentDay === "Wednesday") {
+            if (currentDay === "Tuesday") {
                 banner.style.display = "block";
             } else {
                 banner.style.display = "none";
