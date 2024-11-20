@@ -56,6 +56,17 @@
             margin-bottom: 10px;
         }
 
+        .pending-orders-banner {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #004d00;
+            color: #00ff00;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+
         .schedule-table {
             width: 100%;
             border-collapse: collapse;
@@ -88,7 +99,6 @@
         .current-activity {
             background-color: #00ff00;
             color: #1e1e1e;
-            animation: blink 1.5s infinite;
         }
 
         .refresh-button {
@@ -108,19 +118,15 @@
         .refresh-button:hover {
             background-color: #004d00;
         }
-
-        @keyframes blink {
-            50% {
-                background-color: #00ff00;
-                opacity: 0.5;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="schedule-container">
         <h2>Vipin's Schedule</h2>
         <div class="current-day" id="currentDay"></div>
+        <div class="pending-orders-banner" id="pendingOrdersBanner">
+            <strong>Note:</strong> Handle pending orders today!
+        </div>
         <table class="schedule-table" id="scheduleTable">
             <thead>
                 <tr>
@@ -181,30 +187,18 @@
 
             document.getElementById("currentDay").innerHTML = `<strong>Today:</strong> ${currentDay}`;
 
-            const scheduleForToday = schedule[currentDay];
-            const now = new Date();
-            const currentTime = now.getHours() * 60 + now.getMinutes(); // in minutes
-
-            let currentActivity = null;
-            let currentTimeSlot = null;
-
-            for (let i = 0; i < scheduleForToday.length; i++) {
-                const [startHour, startMinute] = scheduleForToday[i].time.split(' - ')[0].split(':');
-                const [endHour, endMinute] = scheduleForToday[i].time.split(' - ')[1].split(':');
-                const start = parseInt(startHour) * 60 + parseInt(startMinute);
-                const end = parseInt(endHour) * 60 + parseInt(endMinute);
-
-                if (currentTime >= start && currentTime <= end) {
-                    currentActivity = scheduleForToday[i];
-                    currentTimeSlot = i;
-                    break;
-                }
+            const banner = document.getElementById("pendingOrdersBanner");
+            if (currentDay === "Wednesday") {
+                banner.style.display = "block";
+            } else {
+                banner.style.display = "none";
             }
 
+            const scheduleForToday = schedule[currentDay];
             let tableContent = '';
             scheduleForToday.forEach((activity, index) => {
                 tableContent += `
-                    <tr class="${index === currentTimeSlot ? 'current-activity' : ''}">
+                    <tr>
                         <td>${activity.time}</td>
                         <td>${activity.icon} ${activity.activity}</td>
                     </tr>
@@ -212,19 +206,15 @@
             });
 
             document.getElementById("scheduleBody").innerHTML = tableContent;
-
-            if (currentActivity && currentActivity.activity !== document.title) {
-                document.title = `Vipin's Schedule - ${currentActivity.activity}`;
-                alert(`New activity: ${currentActivity.activity}`);
-            }
         }
 
         function refreshSchedule() {
             getTodaySchedule();
         }
 
-        setInterval(refreshSchedule, 60000); // Refresh every minute
-        window.onload = refreshSchedule;
+        window.onload = function () {
+            getTodaySchedule();
+        };
     </script>
 </body>
 </html>
