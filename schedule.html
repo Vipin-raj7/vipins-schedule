@@ -96,9 +96,19 @@
             cursor: pointer;
         }
 
-        .current-activity {
-            background-color: #00ff00;
-            color: #1e1e1e;
+        .schedule-table td.current-activity {
+            background-color: green;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% {
+                background-color: red;
+            }
+            25%, 75% {
+                background-color: green;
+            }
         }
 
         .refresh-button {
@@ -144,77 +154,121 @@
     <script>
         const schedule = {
             "Monday": [
-                { time: "8:00 AM - 10:00 AM", activity: "Chats", icon: "🗨️" },
-                { time: "10:00 AM - 11:30 AM", activity: "Calls", icon: "📞" },
-                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
-                { time: "12:00 PM - 3:00 PM", activity: "Calls", icon: "📞" },
-                { time: "3:00 PM - 4:00 PM", activity: "Chats", icon: "🗨️" },
+                { time: "8:00 AM - 10:00 AM", activity: "Chats" },
+                { time: "10:00 AM - 11:30 AM", activity: "Calls" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch" },
+                { time: "12:00 PM - 3:00 PM", activity: "Calls" },
+                { time: "3:00 PM - 4:00 PM", activity: "Chats" },
             ],
             "Tuesday": [
-                { time: "8:00 AM - 11:30 AM", activity: "Chats", icon: "🗨️" },
-                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
-                { time: "12:00 PM - 12:30 PM", activity: "Chats", icon: "🗨️" },
-                { time: "12:30 PM - 4:00 PM", activity: "Calls", icon: "📞" },
+                { time: "8:00 AM - 11:30 AM", activity: "Chats" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls" },
             ],
             "Wednesday": [
-                { time: "8:00 AM - 11:30 AM", activity: "Chats", icon: "🗨️" },
-                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
-                { time: "12:00 PM - 12:30 PM", activity: "Chats", icon: "🗨️" },
-                { time: "12:30 PM - 4:00 PM", activity: "Calls", icon: "📞" },
+                { time: "8:00 AM - 11:30 AM", activity: "Chats" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls" },
             ],
             "Thursday": [
-                { time: "8:00 AM - 11:30 AM", activity: "Chats", icon: "🗨️" },
-                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
-                { time: "12:00 PM - 12:30 PM", activity: "Chats", icon: "🗨️" },
-                { time: "12:30 PM - 4:00 PM", activity: "Calls", icon: "📞" },
+                { time: "8:00 AM - 11:30 AM", activity: "Chats" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch" },
+                { time: "12:00 PM - 12:30 PM", activity: "Chats" },
+                { time: "12:30 PM - 4:00 PM", activity: "Calls" },
             ],
             "Friday": [
-                { time: "8:00 AM - 10:00 AM", activity: "Chats", icon: "🗨️" },
-                { time: "10:00 AM - 11:30 AM", activity: "Calls", icon: "📞" },
-                { time: "11:30 AM - 12:00 PM", activity: "Lunch", icon: "🍽️" },
-                { time: "12:00 PM - 3:00 PM", activity: "Calls", icon: "📞" },
-                { time: "3:00 PM - 4:00 PM", activity: "Chats", icon: "🗨️" },
+                { time: "8:00 AM - 10:00 AM", activity: "Chats" },
+                { time: "10:00 AM - 11:30 AM", activity: "Calls" },
+                { time: "11:30 AM - 12:00 PM", activity: "Lunch" },
+                { time: "12:00 PM - 3:00 PM", activity: "Calls" },
+                { time: "3:00 PM - 4:00 PM", activity: "Chats" },
             ],
         };
 
-        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-        let currentDay = new Date().toLocaleString('en-us', { weekday: 'long' });
+        const currentDay = new Date().toLocaleString('en-us', { weekday: 'long' });
+        let lastActivity = "";
 
         function getTodaySchedule() {
-            if (!daysOfWeek.includes(currentDay)) {
-                currentDay = "Monday"; // Default to Monday if current day is unknown
-            }
-
-            document.getElementById("currentDay").innerHTML = `<strong>Today:</strong> ${currentDay}`;
+            const scheduleForToday = schedule[currentDay] || schedule["Monday"];
+            document.getElementById("currentDay").innerText = `Today: ${currentDay}`;
 
             const banner = document.getElementById("pendingOrdersBanner");
-            if (currentDay === "Wednesday") {
+            if (currentDay === "Tuesday") {
                 banner.style.display = "block";
             } else {
                 banner.style.display = "none";
             }
 
-            const scheduleForToday = schedule[currentDay];
-            let tableContent = '';
-            scheduleForToday.forEach((activity, index) => {
-                tableContent += `
-                    <tr>
-                        <td>${activity.time}</td>
-                        <td>${activity.icon} ${activity.activity}</td>
-                    </tr>
-                `;
-            });
+            const scheduleBody = document.getElementById("scheduleBody");
+            scheduleBody.innerHTML = "";
 
-            document.getElementById("scheduleBody").innerHTML = tableContent;
+            scheduleForToday.forEach((slot) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${slot.time}</td>
+                    <td>${slot.activity}</td>
+                `;
+                scheduleBody.appendChild(row);
+            });
+        }
+
+        function checkCurrentActivity() {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            const scheduleForToday = schedule[currentDay] || schedule["Monday"];
+            let currentActivity = "";
+
+            // Remove current-activity class from all cells
+            const scheduleBody = document.getElementById("scheduleBody");
+            [...scheduleBody.rows].forEach(row => row.cells[1].classList.remove("current-activity"));
+
+            // Find and apply current-activity class to active row
+            scheduleForToday.forEach((slot, index) => {
+                const [start, end] = slot.time.split(" - ").map(parseTime);
+                if (currentTime >= start && currentTime < end) {
+                    currentActivity = slot.activity;
+                    scheduleBody.rows[index].cells[1].classList.add("current-activity");
+
+                    // Trigger browser notification
+                    if (currentActivity !== lastActivity) {
+                        lastActivity = currentActivity;
+                        sendNotification(currentActivity);
+                    }
+                }
+            });
+        }
+
+        function parseTime(time) {
+            const [hour, minute] = time.split(":");
+            const period = time.split(" ")[1];
+            let hours = parseInt(hour);
+            if (period === "PM" && hours !== 12) hours += 12;
+            if (period === "AM" && hours === 12) hours = 0;
+            return hours * 60 + parseInt(minute);
+        }
+
+        function sendNotification(activity) {
+            if (Notification.permission === "granted") {
+                new Notification(`Current Activity: ${activity}`);
+            }
         }
 
         function refreshSchedule() {
             getTodaySchedule();
+            checkCurrentActivity();
         }
 
-        window.onload = function () {
+        document.addEventListener("DOMContentLoaded", function () {
             getTodaySchedule();
-        };
+            checkCurrentActivity();
+            setInterval(checkCurrentActivity, 60000); // Check every minute for active activity
+        });
+
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
     </script>
 </body>
 </html>
