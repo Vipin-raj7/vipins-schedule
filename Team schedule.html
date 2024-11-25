@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+
+        }
+
+        .schedule-container {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            gap: 10px;
+        }
+
+        .schedule-box {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            padding: 20px;
+            width: 18%;
+            box-sizing: border-box;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+
+        .current-day {
+            background-color: #ffeb3b;
+            color: #000;
+            font-weight: bold;
+        }
+
+        #current-day {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Today's Schedule</h1>
+<p id="current-day"></p>
+
+<div class="schedule-container">
+    <div class="schedule-box" id="vipin-schedule">
+        <h2>Vipin</h2>
+        <table>
+            <tr><th>Time</th><th>Activity</th></tr>
+        </table>
+    </div>
+    <div class="schedule-box" id="oumou-schedule">
+        <h2>Oumou</h2>
+        <table>
+            <tr><th>Time</th><th>Activity</th></tr>
+        </table>
+    </div>
+    <div class="schedule-box" id="amir-schedule">
+        <h2>Amir</h2>
+        <table>
+            <tr><th>Time</th><th>Activity</th></tr>
+        </table>
+    </div>
+    <div class="schedule-box" id="nadine-schedule">
+        <h2>Nadine</h2>
+        <table>
+            <tr><th>Time</th><th>Activity</th></tr>
+        </table>
+    </div>
+    <div class="schedule-box" id="arslen-schedule">
+        <h2>Arslen</h2>
+        <table>
+            <tr><th>Time</th><th>Activity</th></tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Complete schedules for all agents
+    const schedules = {
+        "Vipin": {
+            "Monday": [
+                { "time": "8:00 AM - 10:00 AM", "activity": "Chats" },
+                { "time": "10:00 AM - 11:30 AM", "activity": "Calls" },
+                { "time": "11:30 AM - 12:00 PM", "activity": "Lunch" },
+                { "time": "12:00 PM - 3:00 PM", "activity": "Calls" },
+                { "time": "3:00 PM - 4:00 PM", "activity": "Chats" }
+            ],
+            "Tuesday": [
+                { "time": "8:00 AM - 11:30 AM", "activity": "Chats" },
+                { "time": "11:30 AM - 12:00 PM", "activity": "Lunch" },
+                { "time": "12:00 PM - 12:30 PM", "activity": "Chats" },
+                { "time": "12:30 PM - 4:00 PM", "activity": "Calls" }
+            ],
+            "Wednesday": [
+                { "time": "8:00 AM - 11:30 AM", "activity": "Chats" },
+                { "time": "11:30 AM - 12:00 PM", "activity": "Lunch" },
+                { "time": "12:00 PM - 12:30 PM", "activity": "Chats" },
+                { "time": "12:30 PM - 4:00 PM", "activity": "Calls" }
+            ],
+            "Thursday": [
+                { "time": "8:00 AM - 11:30 AM", "activity": "Chats" },
+                { "time": "11:30 AM - 12:00 PM", "activity": "Lunch" },
+                { "time": "12:00 PM - 12:30 PM", "activity": "Chats" },
+                { "time": "12:30 PM - 4:00 PM", "activity": "Calls" }
+            ],
+            "Friday": [
+                { "time": "8:00 AM - 10:00 AM", "activity": "Chats" },
+                { "time": "10:00 AM - 11:30 AM", "activity": "Calls" },
+                { "time": "11:30 AM - 12:00 PM", "activity": "Lunch" },
+                { "time": "12:00 PM - 3:00 PM", "activity": "Calls" },
+                { "time": "3:00 PM - 4:00 PM", "activity": "Chats" }
+            ]
+        },
+        "Oumou": {
+        "Monday": [
+            { "time": "9:00 AM - 12:30 PM", "activity": "Chats" },
+            { "time": "12:30 PM - 2:30 PM", "activity": "Calls" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Lunch" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Calls" },
+            { "time": "5:30 PM - 6:00 PM", "activity": "Chats & Calls" }
+        ],
+        "Tuesday": [
+            { "time": "9:00 AM - 10:00 AM", "activity": "Chats" },
+            { "time": "10:00 AM - 2:30 PM", "activity": "Calls" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Lunch" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" },
+            { "time": "5:30 PM - 6:00 PM", "activity": "Chats & Calls" }
+        ],
+        "Wednesday": [
+            { "time": "9:00 AM - 10:00 AM", "activity": "Chats" },
+            { "time": "10:00 AM - 2:30 PM", "activity": "Calls" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Lunch" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" },
+            { "time": "5:30 PM - 6:00 PM", "activity": "Chats & Calls" }
+        ],
+        "Thursday": [
+            { "time": "9:00 AM - 10:00 AM", "activity": "Chats" },
+            { "time": "10:00 AM - 2:30 PM", "activity": "Calls" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Lunch" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" },
+            { "time": "5:30 PM - 6:00 PM", "activity": "Chats & Calls" }
+        ],
+        "Friday": [
+            { "time": "9:00 AM - 12:30 PM", "activity": "Chats" },
+            { "time": "12:30 PM - 2:30 PM", "activity": "Calls" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Lunch" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Calls" },
+            { "time": "5:30 PM - 6:00 PM", "activity": "Chats & Calls" }
+        ]
+    },
+        "Amir": {
+        "Monday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "1:30 PM - 2:30 PM", "activity": "Lunch" },
+            { "time": "2:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Tuesday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Calls" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Wednesday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Calls" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Thursday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Calls" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Friday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "1:30 PM - 2:30 PM", "activity": "Lunch" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Chats" }
+        ]
+    },
+        "Nadine": {
+        "Monday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "1:30 PM - 2:30 PM", "activity": "Lunch" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Chats" }
+        ],
+        "Tuesday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Calls" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Wednesday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Calls" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Thursday": [
+            { "time": "8:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 3:30 PM", "activity": "Calls" },
+            { "time": "3:30 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Friday": [
+            { "time": "00:00 AM - 00:00 PM", "activity": "OFF" }
+        ]
+    },
+        "Arslen": {
+        "Monday": [
+            { "time": "00:00 AM - 00:00 PM", "activity": "OFF" },
+	],		
+        "Tuesday": [
+            { "time": "8:00 AM - 9:00 AM", "activity": "Chats" },
+            { "time": "9:00 AM - 1:00 PM", "activity": "Calls" },
+            { "time": "1:00 PM - 2:00 PM", "activity": "Lunch" },
+            { "time": "2:00 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Wednesday": [
+            { "time": "8:00 AM - 9:00 AM", "activity": "Chats" },
+            { "time": "9:00 AM - 1:00 PM", "activity": "Calls" },
+            { "time": "1:00 PM - 2:00 PM", "activity": "Lunch" },
+            { "time": "2:00 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Thursday": [
+            { "time": "8:00 AM - 9:00 AM", "activity": "Chats" },
+            { "time": "9:00 AM - 1:00 PM", "activity": "Calls" },
+            { "time": "1:00 PM - 2:00 PM", "activity": "Lunch" },
+            { "time": "2:00 PM - 5:30 PM", "activity": "Chats" }
+        ],
+        "Friday": [
+            { "time": "8:00 AM - 9:00 AM", "activity": "Chats" },
+            { "time": "9:00 AM - 12:30 PM", "activity": "Calls" },
+            { "time": "12:30 PM - 1:30 PM", "activity": "Lunch" },
+            { "time": "1:30 PM - 2:30 PM", "activity": "Chats" },
+            { "time": "2:30 PM - 4:00 PM", "activity": "Calls" },
+            { "time": "4:00 PM - 5:00 PM", "activity": "Chats" }
+        ]
+    }
+};
+
+    // Dynamically load today's schedules
+    const today = new Date();
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const currentDay = daysOfWeek[today.getDay()];
+
+    document.getElementById('current-day').innerText = currentDay;
+
+document.getElementById('current-day').innerText = currentDay;
+
+const pendingOrdersDay = {
+    "Monday": "Oumou",
+    "Tuesday": "Vipin",
+    "Wednesday": "Arslen",
+    "Thursday": "Nadine",
+    "Friday": "Amir",
+    "Saturday": "Arslen",
+    "Sunday": "Nadine"
+};
+
+const agentForToday = pendingOrdersDay[currentDay];
+if (agentForToday) {
+    const banner = document.createElement('div');
+    banner.innerText = `${agentForToday}, it's your day to work on the pending orders.`;
+    banner.style.backgroundColor = '#ff9800';
+    banner.style.color = '#000';
+    banner.style.padding = '10px';
+    banner.style.textAlign = 'center';
+    banner.style.margin = '20px 0';
+    banner.style.fontWeight = 'bold';
+    document.body.insertBefore(banner, document.body.firstChild);
+}
+
+    function renderSchedule(agent) {
+        const schedule = schedules[agent][currentDay];
+        const table = document.querySelector(`#${agent.toLowerCase()}-schedule table`);
+        schedule.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.time}</td><td>${item.activity}</td>`;
+            table.appendChild(row);
+        });
+    }
+
+    ["Vipin", "Oumou", "Amir", "Nadine", "Arslen"].forEach(renderSchedule);
+
+
+</script>
+
+</body>
+</html>
